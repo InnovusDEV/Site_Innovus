@@ -5,18 +5,41 @@ on:
       - main
   workflow_dispatch:
     inputs:
-    
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Report trigger - Automatic execution
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: "warning"
+          notification_title: 'Workflow: *{workflow}* has been triggered by ${{ github.actor }} - automatic execution'
+          message_format: '*{workflow}* has been triggered in <{repo_url}|{repo}> using GIT REF: <{commit_url}|{commit_sha}>'
+          footer: '<{run_url}|View Run>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+
       - name: 🚚 Get latest code
         uses: actions/checkout@v2
-    
+
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: 66.225.201.137
           username: Site_Innovus@innovusweb.com
           password: ${{ secrets.FTP_ACCESO }}
+
+      - name: Report Status - Automatic execution
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure,success'
+          notification_title: 'Workflow: *{workflow}* has *{status_message}* status in <{run_url}|run> - automatic execution'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: '<{run_url}|View Run>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
