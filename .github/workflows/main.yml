@@ -1,7 +1,11 @@
-on: push
+name: 🚀 Deploy website on push
+on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
-  name: 🚀 Deploy website on push
+    
   jobs:
     web-deploy:
       name: 🎉 Deploy
