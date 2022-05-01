@@ -11,13 +11,13 @@ jobs:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Report trigger - Automatic execution
+      - name: Report trigger
         if: always()
         uses: ravsamhq/notify-slack-action@v1
         with:
           status: "warning"
-          notification_title: 'Workflow: *{workflow}* has been triggered by ${{ github.actor }} - automatic execution'
-          message_format: '*{workflow}* has been triggered in <{repo_url}|{repo}> using GIT REF: <{commit_url}|{commit_sha}>'
+          notification_title: 'Workflow: *{workflow}* ha sido lanzado por ${{ github.actor }}'
+          message_format: '*{workflow}* se ha lanzado desde el repo <{repo_url}|{repo}> unsando GIT REF: <{commit_url}|{commit_sha}>'
           footer: '<{run_url}|View Run>'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
@@ -32,14 +32,14 @@ jobs:
           username: Site_Innovus@innovusweb.com
           password: ${{ secrets.FTP_ACCESO }}
 
-      - name: Report Status - Automatic execution
+      - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v1
         with:
           status: ${{ job.status }}
           notify_when: 'failure,success'
-          notification_title: 'Workflow: *{workflow}* has *{status_message}* status in <{run_url}|run> - automatic execution'
-          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          notification_title: 'Workflow: *{workflow}* tiene el estatus *{status_message}* para mayor informacion <{run_url}|run>'
+          message_format: '{emoji} *{workflow}* {status_message} en: <{repo_url}|{repo}>'
           footer: '<{run_url}|View Run>'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
